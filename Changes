@@ -1,5 +1,8 @@
 Revision history for Text-Trac
 
 0.01    Tue Jun 20
+        Fix the link pattern of AutoLinkHttp.pm.
+
+0.01    Tue Jun 20
         First version, released on an unsuspecting world.
 

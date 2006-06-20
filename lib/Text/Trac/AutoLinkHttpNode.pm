@@ -2,8 +2,8 @@ package Text::Trac::AutoLinkHttpNode;
 use base qw(Text::Trac::InlineNode);
 use strict;
 
-my $pattern1 = '(https?:\/\/ [A-Za-z0-9~\/._\?\&=\-%#\+:\;,\@\']+)';
-my $pattern2 = '\[ (https?:\/\/[A-Za-z0-9~\/._\?\&=\-%#\+:\;,\@\']+) \s+ (.+) \]';
+my $pattern1 = '(https?:\/\/[A-Za-z0-9~\/._\?\&=\-%#\+:\;,\@\']+)';
+my $pattern2 = '\[ (https?:\/\/[A-Za-z0-9~\/._\?\&=\-%#\+:\;,\@\']+) \s+ ([^\]]+) \]';
 
 sub init {
     my $self = shift;
