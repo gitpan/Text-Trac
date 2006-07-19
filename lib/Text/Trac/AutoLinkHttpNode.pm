@@ -2,8 +2,10 @@ package Text::Trac::AutoLinkHttpNode;
 use base qw(Text::Trac::InlineNode);
 use strict;
 
-my $pattern1 = '(https?:\/\/[A-Za-z0-9~\/._\?\&=\-%#\+:\;,\@\']+)';
-my $pattern2 = '\[ (https?:\/\/[A-Za-z0-9~\/._\?\&=\-%#\+:\;,\@\']+) \s+ ([^\]]+) \]';
+my $url_regex = 'https?:\/\/[A-Za-z0-9~\/._\?\&=\-%#\+:\;,\@\']+[A-Za-z0-9~\/_\?\&=\-%#\+:\;,\@\']';
+
+my $pattern1 = "($url_regex)";
+my $pattern2 = "\\[ ($url_regex) \\s+ ([^\\]]+) \\]";
 
 sub init {
     my $self = shift;
@@ -16,18 +18,22 @@ sub parse {
     my $c = $self->{context};
     my $pattern = $self->pattern;
 
-    $l =~ $pattern or return $l;
-    my $match = $2 || $1;
-    if ( $match =~ /\.(png|gif|jpg)$/ ){
-        $l =~ s{ $pattern2 }{<img src="$1" alt="$2" />}xmsg;
-        $l =~ s{ $pattern1 }{<img src="$1" alt="$1" />}xmsg unless $& =~ /^\[/;
-    }
-    else {
-        $l =~ s{ $pattern2 }{<a class="ext-link" href="$1">$2</a>}xmsg;
-        $l =~ s{ $pattern1 }{<a class="ext-link" href="$1">$1</a>}xmsg unless $& =~ /^\[/;
+    my $copy_of_l = $l;
+
+    while ( $l =~ /$pattern/g ){
+        my $match = $2 || $1;
+        if ( $match =~ /\.(png|gif|jpg)$/ ){
+            $copy_of_l =~ s{ $pattern2 }{<img src="$1" alt="$2" />}xmsg;
+            $copy_of_l =~ s{ $pattern1 }{<img src="$1" alt="$1" />}xmsg unless $& =~ /^\[/;
+        }
+        else {
+            $copy_of_l =~ s{ $pattern2 }{<a class="ext-link" href="$1">$2</a>}xmsg;
+            $copy_of_l =~ s{ $pattern1 }{<a class="ext-link" href="$1">$1</a>}xmsg unless $& =~ /^\[/;
+        }
+
     }
 
-    return $l;
+    return $copy_of_l;
 }
 
 1;

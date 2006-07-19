@@ -5,7 +5,7 @@ use strict;
 use Text::Trac::Context;
 use Text::Trac::BlockNode;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 my %Defaults = (
     html              => '',
@@ -54,7 +54,7 @@ Text::Trac - Perl extension for formatting text with Trac Wiki Style.
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =head1 SYNOPSIS
 
