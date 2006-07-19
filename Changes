@@ -1,5 +1,8 @@
 Revision history for Text-Trac
 
+0.04    Wed Jul 19
+        Fix autolink handling, again.
+
 0.03    Wed Jul 19
         Fix autolink handling.
 
