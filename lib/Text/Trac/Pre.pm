@@ -1,4 +1,4 @@
-package Text::Trac::PreNode;
+package Text::Trac::Pre;
 
 use strict;
 use base qw(Text::Trac::BlockNode);

@@ -1,351 +1,199 @@
 #!perl -T
 
 use strict;
-use Test::More tests => 27;
-BEGIN { use_ok('Text::Trac') };
+use Test::Base;
+use Text::Trac;
+
+delimiters('###');
+
+plan tests => 1 * blocks;
 
 my $p = Text::Trac->new();
 
-isa_ok($p, 'Text::Trac');
+sub parse {
+    local $_ = shift;
+    $p->parse($_);
+    $p->html;
+}
 
-my ($text, $html, $generated_html);
+filters { input => 'parse', expected => 'chomp' };
+run_is 'input' => 'expected';
 
-### h1 test ###
-$text =<<txt;
+__DATA__
+### h1 test
+--- input
 = heading 1 =
-txt
-
-$html =<<html;
+--- expected
 <h1 id="heading1">heading 1</h1>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### h2 test ###
-$text =<<txt;
+### h2 test
+--- input
 == heading 2 ==
-txt
-
-$html =<<html;
+--- expected
 <h2 id="heading2">heading 2</h2>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### h3 test ###
-$text =<<txt;
+### h3 test
+--- input
 === heading 3 ===
-txt
-
-$html =<<html;
+--- expected
 <h3 id="heading3">heading 3</h3>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### h4 test ###
-$text =<<txt;
+### h4 test
+--- input
 ==== heading 4 ====
-txt
-
-$html =<<html;
+--- expected
 <h4 id="heading4">heading 4</h4>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### h5 test ###
-$text =<<txt;
+### h5 test
+--- input
 ===== heading 5 =====
-txt
-
-$html =<<html;
+--- expected
 <h5 id="heading5">heading 5</h5>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### bold test ###
-$text =<<txt;
+### bold test
+--- input
 '''bold''' '''bold'''
-txt
-
-$html =<<html;
+--- expected
 <p>
 <strong>bold</strong> <strong>bold</strong>
 </p>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### italic test ###
-$text =<<txt;
+### italic test
+--- input
 ''italic'' ''italic''
-txt
-
-$html =<<html;
+--- expected
 <p>
 <i>italic</i> <i>italic</i>
 </p>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### bolditalic test ###
-$text =<<txt;
+### bolditalic test
+--- input
 '''''bolditalic''''' '''''bolditalic'''''
-txt
-
-$html =<<html;
+--- expected
 <p>
 <strong><i>bolditalic</i></strong> <strong><i>bolditalic</i></strong>
 </p>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### underline test ###
-$text =<<txt;
+### underline test
+--- input
 __underline__ __underline__
-txt
-
-$html =<<html;
+--- expected
 <p>
 <span class="underline">underline</span> <span class="underline">underline</span>
 </p>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### monospace test ###
-$text =<<txt;
+### monospace test
+--- input
 `monospace` {{{monospace}}}
-txt
-
-$html =<<html;
+--- expected
 <p>
 <tt>monospace</tt> <tt>monospace</tt>
 </p>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### strike test ###
-$text =<<txt;
+### strike test
+--- input
 ~~strike~~ ~~strike~~
-txt
-
-$html =<<html;
+--- expected
 <p>
 <del>strike</del> <del>strike</del>
 </p>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### sup test ###
-$text =<<txt;
+### sup test
+--- input
 ^sup^ ^sup^
-txt
-
-$html =<<html;
+--- expected
 <p>
 <sup>sup</sup> <sup>sup</sup>
 </p>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### sub test ###
-$text =<<txt;
+### sub test
+--- input
 ,,sub,, ,,sub,,
-txt
-
-$html =<<html;
+--- expected
 <p>
 <sub>sub</sub> <sub>sub</sub>
 </p>
-html
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### br test ###
-$text =<<TXT;
+### br test
+--- input
 line1[[BR]]line2
-TXT
-
-$html =<<HTML;
+--- expected
 <p>
 line1<br />line2
 </p>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-
-### p test ###
-$text =<<TXT;
+### p test
+--- input
 test
 test
-TXT
-
-$html =<<HTML;
+--- expected
 <p>
 test
 test
 </p>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### ul test ###
-$text =<<TXT;
+### ul test
+--- input
  * list 1-1
  * list 1-2
    * list 2-1
    * list 2-2
-TXT
-
-$html =<<HTML;
+--- expected
 <ul><li>list 1-1</li>
 <li>list 1-2</li>
 <ul><li>list 2-1</li>
 <li>list 2-2</li></ul></ul>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### ul test ###
-$text =<<TXT;
- * list 1-1
- * list 1-2
-   * list 2-1
-   * list 2-2
-TXT
-
-$html =<<HTML;
-<ul><li>list 1-1</li>
-<li>list 1-2</li>
-<ul><li>list 2-1</li>
-<li>list 2-2</li></ul></ul>
-HTML
-
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### ol test ###
-$text =<<TXT;
+### ol test
+--- input
  1. list 1-1
  1. list 1-2
    a. list a-1
    a. list a-2
-TXT
-
-$html =<<HTML;
+--- expected
 <ol start="1"><li>list 1-1</li>
 <li>list 1-2</li>
 <ol class="loweralpha"><li>list a-1</li>
 <li>list a-2</li></ol></ol>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### blockauote test ###
-$text =<<TXT;
+### blockauote test
+--- input
   This text is a quote from someone else.
-TXT
-
-$html =<<HTML;
+--- expected
 <blockquote>
 <p>
   This text is a quote from someone else.
 </p>
 </blockquote>
-HTML
 
-$p->process($text);
-chomp($html);
-is( $p->html, $html );
-
-### pre test ###
-$text =<<TXT;
+### pre test
+--- input
 {{{
   This is pre-formatted text.
   This also pre-formatted text.
 }}}
-TXT
-
-$html =<<HTML;
+--- expected
 <pre class="wiki">
   This is pre-formatted text.
   This also pre-formatted text.
 </pre>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### table test ###
-$text =<<TXT;
+### table test
+--- input
 ||Cell 1||Cell 2||Cell 3||
 ||Cell 4||Cell 5||Cell 6||
-TXT
-
-$html =<<HTML;
+--- expected
 <table>
 <tr><td>Cell 1</td><td>Cell 2</td><td>Cell 3</td></tr>
 <tr><td>Cell 4</td><td>Cell 5</td><td>Cell 6</td></tr>
 </table>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### hr test ###
-$text =<<TXT;
+### hr test
+--- input
 line1
 ====
 line2
-TXT
-
-$html =<<HTML;
+--- expected
 <p>
 line1
 </p>
@@ -353,14 +201,9 @@ line1
 <p>
 line2
 </p>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### dl test ###
-$text =<<TXT;
+### dl test
+--- input
  title1::
   content 1-1
   content 1-2
@@ -368,9 +211,7 @@ $text =<<TXT;
   content 2-1
   content 2-2
   content 2-3
-TXT
-
-$html =<<HTML;
+--- expected
 <dl>
 <dt>title1</dt>
 <dd>
@@ -384,44 +225,115 @@ content 2-2
 content 2-3
 </dd>
 </dl>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### autolink test ###
-
-$text =<<TXT;
+### autolink test
+--- input
 http://mizzy.org/
 [http://mizzy.org/ Title]
-TXT
-
-$html =<<HTML;
+--- expected
 <p>
 <a class="ext-link" href="http://mizzy.org/">http://mizzy.org/</a>
 <a class="ext-link" href="http://mizzy.org/">Title</a>
 </p>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
-
-### auto image link test ###
-
-$text =<<TXT;
+### auto image link test
+--- input
 http://mizzy.org/test.png
 [http://mizzy.org/test.png Image]
-TXT
-
-$html =<<HTML;
+--- expected
 <p>
 <img src="http://mizzy.org/test.png" alt="http://mizzy.org/test.png" />
 <img src="http://mizzy.org/test.png" alt="Image" />
 </p>
-HTML
 
-$p->parse($text);
-chomp($html);
-is( $p->html, $html );
+### ul node with single space
+--- input
+ * indent with
+ * single space
+   * sublist with
+   * two spaces
+--- expected
+<ul><li>indent with</li>
+<li>single space</li>
+<ul><li>sublist with</li>
+<li>two spaces</li></ul></ul>
+
+### ul node with double space
+--- input
+  * indent with
+  * two spaces
+    * sublist with
+    * two spaces
+--- expected
+<ul><li>indent with</li>
+<li>two spaces</li>
+<ul><li>sublist with</li>
+<li>two spaces</li></ul></ul>
+
+### ol node with single space
+--- input
+ 1. indent with
+ 1. single space
+   a. sublist with
+   a. two spaces
+--- expected
+<ol start="1"><li>indent with</li>
+<li>single space</li>
+<ol class="loweralpha"><li>sublist with</li>
+<li>two spaces</li></ol></ol>
+
+### ol node with double space
+--- input
+  1. indent with
+  1. two spaces
+    a. sublist with
+    a. two spaces
+--- expected
+<ol start="1"><li>indent with</li>
+<li>two spaces</li>
+<ol class="loweralpha"><li>sublist with</li>
+<li>two spaces</li></ol></ol>
+
+### dl node with single space
+--- input
+ title1::
+   indent title
+   single space
+ title2::
+   indent content
+   double space
+--- expected
+<dl>
+<dt>title1</dt>
+<dd>
+indent title
+single space
+</dd>
+<dt>title2</dt>
+<dd>
+indent content
+double space
+</dd>
+</dl>
+
+### dl node with double space
+--- input
+  title1::
+    indent title
+    double space
+  title2::
+    indent content
+    double space
+--- expected
+<dl>
+<dt>title1</dt>
+<dd>
+indent title
+double space
+</dd>
+<dt>title2</dt>
+<dd>
+indent content
+double space
+</dd>
+</dl>

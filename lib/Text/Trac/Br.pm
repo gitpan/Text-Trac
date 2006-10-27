@@ -1,4 +1,4 @@
-package Text::Trac::BrNode;
+package Text::Trac::Br;
 
 use strict;
 use base qw(Text::Trac::InlineNode);

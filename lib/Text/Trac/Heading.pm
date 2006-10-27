@@ -1,4 +1,4 @@
-package Text::Trac::HeadingNode;
+package Text::Trac::Heading;
 use strict;
 use base qw(Text::Trac::BlockNode);
 

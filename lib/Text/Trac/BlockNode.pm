@@ -40,7 +40,6 @@ sub parse {
     $self->inline_parsers( $self->_get_parsers('inline') );
 
     while ( defined ( my $l = $c->shiftline ) ) {
-        #my $l = $c->shiftline;
         next if $l =~ /^$/;
         for my $parser ( @{ $self->_get_matched_parsers('block', $l) } ){
             $parser->parse($l);
@@ -54,7 +53,7 @@ sub _get_parsers {
     $type .= '_nodes';
     my @parsers;
     for ( @{ $self->$type } ){
-        my $class = 'Text::Trac::' . $self->_camelize($_) . 'Node';
+        my $class = 'Text::Trac::' . $self->_camelize($_);
         $class->require;
         push @parsers, $class->new({ context => $self->context });
     }
@@ -69,7 +68,7 @@ sub _get_matched_parsers {
     my @matched_parsers;
 
     for my $parser ( @{ $self->$type } ){
-        next if ( grep { ref($parser) eq 'Text::Trac::'. $self->_camelize($_) . 'Node' } @{$c->in_block_of}
+        next if ( grep { ref($parser) eq 'Text::Trac::'. $self->_camelize($_) } @{$c->in_block_of}
             and $type =~ /^block/ );
         my $pattern = $parser->pattern or next;
 
@@ -78,7 +77,7 @@ sub _get_matched_parsers {
         }
     }
 
-    push @matched_parsers, Text::Trac::PNode->new({ context => $self->context })
+    push @matched_parsers, Text::Trac::P->new({ context => $self->context })
         if( !@matched_parsers and $type =~ /^block/ );
 
     return \@matched_parsers;

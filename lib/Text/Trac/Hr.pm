@@ -1,4 +1,4 @@
-package Text::Trac::HrNode;
+package Text::Trac::Hr;
 
 use strict;
 use base qw(Text::Trac::BlockNode);

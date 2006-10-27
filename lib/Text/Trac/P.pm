@@ -1,4 +1,4 @@
-package Text::Trac::PNode;
+package Text::Trac::P;
 use strict;
 use base qw(Text::Trac::BlockNode);
 use Text::Trac::Text;
@@ -23,7 +23,7 @@ sub parse {
 
         # parse other block nodes
         my $parsers = $self->_get_matched_parsers('block', $l);
-        if( grep { ref($_) ne 'Text::Trac::PNode' } @{$parsers} ){
+        if( grep { ref($_) ne 'Text::Trac::P' } @{$parsers} ){
             #$c->htmllines($l);
             $c->htmllines('</p>');
             pop @{$c->in_block_of};

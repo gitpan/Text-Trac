@@ -1,5 +1,11 @@
 Revision history for Text-Trac
 
+0.05    Sat Oct 28
+        Using Test::Base instead of Test::More in 01-text-trac.t.
+        Fix the bug reported on rt.cpan.org ticket #21431.
+        http://rt.cpan.org/Ticket/Display.html?id=21431
+        Thanks to Andrew Sterling Hanenkamp and Graham TerMarsch.
+
 0.04    Wed Jul 19
         Fix autolink handling, again.
 

@@ -1,11 +1,11 @@
-package Text::Trac::SupNode;
+package Text::Trac::Monospace;
 
 use strict;
 use base qw(Text::Trac::InlineNode);
 
 sub init {
     my $self = shift;
-    $self->pattern(qr/\^ (.*?) \^/xms);
+    $self->pattern(qr/{{{(.*?)}}}|`(.*?)`/xms);
     return $self;
 }
 
@@ -15,7 +15,7 @@ sub parse {
     my $pattern = $self->pattern;
     $l =~ $pattern or return;
 
-    $l =~ s{ $pattern }{<sup>$1</sup>}xmsg;
+    $l =~ s{ $pattern }{ '<tt>' . ( $1 || $2 ) . '</tt>'}xmsge;
 
     return $l;
 }

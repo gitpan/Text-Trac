@@ -1,4 +1,4 @@
-package Text::Trac::AutoLinkHttpNode;
+package Text::Trac::AutoLinkHttp;
 use base qw(Text::Trac::InlineNode);
 use strict;
 

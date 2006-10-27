@@ -1,10 +1,11 @@
-package Text::Trac::UnderlineNode;
+package Text::Trac::Sub;
+
 use strict;
 use base qw(Text::Trac::InlineNode);
 
 sub init {
     my $self = shift;
-    $self->pattern(qr/__(.*?)__/xms);
+    $self->pattern(qr/,, (.*?) ,,/xms);
     return $self;
 }
 
@@ -14,7 +15,7 @@ sub parse {
     my $pattern = $self->pattern;
     $l =~ $pattern or return;
 
-    $l =~ s{ $pattern }{<span class="underline">$1</span>}xmsg;
+    $l =~ s{ $pattern }{<sub>$1</sub>}xmsg;
 
     return $l;
 }

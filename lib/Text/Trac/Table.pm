@@ -1,4 +1,4 @@
-package Text::Trac::TableNode;
+package Text::Trac::Table;
 
 use strict;
 use base qw(Text::Trac::BlockNode);

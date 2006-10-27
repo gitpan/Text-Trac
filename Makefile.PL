@@ -9,7 +9,7 @@ WriteMakefile(
     ABSTRACT_FROM       => 'lib/Text/Trac.pm',
     PL_FILES            => {},
     PREREQ_PM => {
-        'Test::More'               => 0,
+        'Test::Base'               => 0,
         'UNIVERSAL::require'       => 0,
         'Class::Accessor::Fast'    => 0,
         'Class::Data::Inheritable' => 0,

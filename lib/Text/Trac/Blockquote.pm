@@ -1,11 +1,11 @@
-package Text::Trac::BlockquoteNode;
+package Text::Trac::Blockquote;
 
 use strict;
 use base qw( Text::Trac::BlockNode );
 
 sub init {
     my $self = shift;
-    $self->pattern(qr/^\s\s([^\s].+)$/);
+    $self->pattern(qr/^\s+([^\s\*\daiAI].+)$/);
     $self->block_nodes([ qw( heading p ul ol ) ]);
 }
 
@@ -13,7 +13,7 @@ sub parse {
     my ( $self, $l ) = @_;
     my $c = $self->{context};
     my $pattern = $self->pattern;
-    #$l =~ $pattern or return $l;
+    return if $l =~ /::$/;
 
     $c->htmllines('<blockquote>');
     push @{$c->in_block_of}, 'blockquote';

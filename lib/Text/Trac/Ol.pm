@@ -1,4 +1,4 @@
-package Text::Trac::OlNode;
+package Text::Trac::Ol;
 
 use strict;
 use base qw(Text::Trac::BlockNode);
@@ -14,8 +14,11 @@ sub parse {
     my $c = $self->{context};
     my $pattern = $self->pattern;
     $l =~ $pattern or return $l;
-    my $ol_level = ( length($1) + 1 ) / 2;
     my $type  = $2;
+
+    my $space = length($1);
+    my $level = $c->ol->{level};
+    $c->ol->{space} ||= 0;
 
     my $start_tag;
     if ($type =~ /(\d)/){
@@ -34,18 +37,16 @@ sub parse {
         $start_tag = qq{<ol class="upperroman">};
     }
 
-    if ( $ol_level > $c->current_ol_level ){
-        for ( 1 .. $ol_level - $c->current_ol_level ){
-            $l = $start_tag . $l;
-        }
+    if ( $space > $c->ol->{space} ){
+        $l = $start_tag . $l;
+        $level++;
     }
-    elsif ( $ol_level < $c->current_ol_level ){
-        for ( 1 .. $c->current_ol_level - $ol_level ){
-            $l = '</ol>' . $l;
-        }
+    elsif ( $space < $c->ol->{space} ){
+        $l = '</ol>' . $l;
+        $level--;
     }
 
-    $c->current_ol_level($ol_level);
+    $c->ol({level => $level, space => $space });
 
     $l =~ s{ $pattern }{<li>$3</li>}xmsg;
 
@@ -53,10 +54,10 @@ sub parse {
         $self->parse($l);
     }
     else {
-        for ( 1 .. $c->current_ol_level($ol_level) ){
+        for ( 1 .. $c->ol->{level} ){
             $l .= '</ol>';
         }
-        $c->current_ol_level(0);
+        $c->ol->{level} = 0;
     }
 
     # parse inline nodes
@@ -66,6 +67,8 @@ sub parse {
     }
 
     $c->htmllines($l);
+
+    return;
 }
 
 1;

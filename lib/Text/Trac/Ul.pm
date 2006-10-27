@@ -1,4 +1,4 @@
-package Text::Trac::UlNode;
+package Text::Trac::Ul;
 
 use strict;
 use base qw(Text::Trac::BlockNode);
@@ -13,20 +13,21 @@ sub parse {
     my $c = $self->{context};
     my $pattern = $self->pattern;
     $l =~ $pattern or return $l;
-    my $ul_level = ( length($1) + 1 ) / 2;
 
-    if ( $ul_level > $c->current_ul_level ){
-        for ( 1 .. $ul_level - $c->current_ul_level ){
-            $l = '<ul>' . $l;
-        }
+    my $space = length($1);
+    my $level = $c->ul->{level};
+    $c->ul->{space} ||= 0;
+
+    if ( $space > $c->ul->{space} ) {
+        $l = '<ul>' . $l;
+        $level++;
     }
-    elsif ( $ul_level < $c->current_ul_level ){
-        for ( 1 .. $c->current_ul_level - $ul_level ){
-            $l = '</ul>' . $l;
-        }
+    elsif ( $space < $c->ul->{space} ) {
+        $l = '</ul>' . $l;
+        $level--;
     }
 
-    $c->current_ul_level($ul_level);
+    $c->ul({level => $level, space => $space });
 
     $l =~ s{ $pattern }{<li>$2</li>}xmsg;
 
@@ -34,10 +35,10 @@ sub parse {
         $self->parse($l);
     }
     else {
-        for ( 1 .. $c->current_ul_level($ul_level) ){
+        for ( 1 .. $c->ul->{level} ){
             $l .= '</ul>';
         }
-        $c->current_ul_level(0);
+        $c->ul->{level} = 0;
     }
 
     # parse inline nodes
@@ -47,6 +48,8 @@ sub parse {
     }
 
     $c->htmllines($l);
+
+    return;
 }
 
 1;

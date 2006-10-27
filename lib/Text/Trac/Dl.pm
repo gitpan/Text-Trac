@@ -1,4 +1,4 @@
-package Text::Trac::DlNode;
+package Text::Trac::Dl;
 
 use strict;
 use base qw(Text::Trac::BlockNode);
@@ -50,6 +50,7 @@ sub parse {
     pop @{$c->in_block_of};
     $c->htmllines('</dl>');
 
+    return;
 }
 
 1;
