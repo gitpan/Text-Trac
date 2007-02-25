@@ -5,7 +5,7 @@ use strict;
 use Text::Trac::Context;
 use Text::Trac::BlockNode;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 my %Defaults = (
     html              => '',
@@ -27,10 +27,17 @@ sub new {
 sub parse {
     my $self = shift;
     my $text = shift or return;
+
+    $self->{trac_url} = '/' unless defined $self->{trac_url};
+    for ( keys %$self ) {
+        if ( $_ =~ /^trac.+url$/ ) {
+            $self->{$_} .= '/' if $self->{$_} !~ m!/$!;
+        }
+    }
+
     my $c = Text::Trac::Context->new({
-        text              => $text,
-        permalink         => $self->{permalink},
-        min_heading_level => $self->{min_heading_level},
+        %$self,
+        text => $text,
     });
 
     my $node = Text::Trac::BlockNode->new({
@@ -54,13 +61,16 @@ Text::Trac - Perl extension for formatting text with Trac Wiki Style.
 
 =head1 VERSION
 
-Version 0.05
+Version 0.06
 
 =head1 SYNOPSIS
 
     use Text::Trac;
 
-    my $parser = Text::Trac->new();
+    my $parser = Text::Trac->new(
+        trac_url      => 'http://trac.mizzy.org/public/',
+        disable_links => [ qw( changeset ticket ) ],
+    );
 
     $parser->parse($text);
 
@@ -75,6 +85,54 @@ Text::Trac parses text with Trac WikiFormatting and convert it to html format.
 =head2 new
 
 Constructs Text::Trac object.
+
+Available arguments are:
+
+
+=head3 trac_url
+
+Base URL for TracLinks.Default is /. You can specify each type of URL individually.
+Available URLs are:
+
+=over
+
+=item trac_attachment_url
+
+=item trac_changeset_url
+
+=item trac_log_url
+
+=item trac_milestone_url
+
+=item trac_report_url
+
+=item trac_source_url
+
+=item trac_ticket_url
+
+=item trac_wiki_url
+
+=back
+
+=head3 disable_links
+
+Specify TracLink types you want to disable.
+All types are enables if you don't specify this option.
+
+    my $parser = Text::Trac->new(
+        disable_links => [ qw( changeset ticket ) ],
+    );
+
+=head3 enable_links
+
+Specify TracLink types you want to enable.Other types are disabled.
+You cannot use both disable_links and enable_links at once.
+
+    my $parser = Text::Trac->new(
+        enable_links => [ qw( changeset ticket ) ],
+    );
+
+
 
 =head2 parse
 

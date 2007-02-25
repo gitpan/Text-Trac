@@ -3,27 +3,34 @@ package Text::Trac::BlockNode;
 use strict;
 use base qw( Class::Accessor::Fast Class::Data::Inheritable );
 use UNIVERSAL::require;
+use Text::Trac::InlineNode;
 
 __PACKAGE__->mk_classdata(
     block_nodes    => [ qw( heading hr p ul ol blockquote pre table dl ) ]
 );
-__PACKAGE__->mk_classdata(
-    inline_nodes   => [ qw( bold_italic bold italic underline monospace strike sup sub br
-                            auto_link_http ) ]
-);
+
+#__PACKAGE__->mk_classdata(
+#    inline_nodes   => [ qw( bold_italic bold italic underline monospace strike sup sub br
+#                            auto_link_http macro trac_links ) ]
+#);
 __PACKAGE__->mk_classdata(
     block_parsers  => []
 );
-__PACKAGE__->mk_classdata(
-    inline_parsers => []
-);
-__PACKAGE__->mk_accessors( qw( context pattern) );
+
+#__PACKAGE__->mk_classdata(
+#    inline_parsers => []
+#);
+
+__PACKAGE__->mk_accessors( qw( context pattern inline_parser ) );
 
 sub new {
     my ( $class, $params ) = @_;
-    my $self = { %$params };
+    my $self = {
+        %$params,
+    };
     bless $self, $class;
     $self->init;
+    $self->inline_parser( Text::Trac::InlineNode->new($self->context));
     return $self;
 }
 
@@ -37,7 +44,7 @@ sub parse {
     my $c = $self->context;
 
     $self->block_parsers( $self->_get_parsers('block') );
-    $self->inline_parsers( $self->_get_parsers('inline') );
+    #$self->inline_parsers( $self->_get_parsers('inline') );
 
     while ( defined ( my $l = $c->shiftline ) ) {
         next if $l =~ /^$/;
@@ -45,6 +52,11 @@ sub parse {
             $parser->parse($l);
         }
     }
+}
+
+sub replace {
+    my ( $self, $l ) = @_;
+    return $self->inline_parser->parse($l);
 }
 
 sub _get_parsers {
@@ -79,7 +91,6 @@ sub _get_matched_parsers {
 
     push @matched_parsers, Text::Trac::P->new({ context => $self->context })
         if( !@matched_parsers and $type =~ /^block/ );
-
     return \@matched_parsers;
 }
 

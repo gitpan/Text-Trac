@@ -17,10 +17,7 @@ sub parse {
     my $id = $self->_strip( $2 );
     $l = qq(<h$level id="$id">$2</h$level>);
 
-    my $parsers = $self->_get_matched_parsers('inline', $l);
-    for ( @{$parsers} ){
-        $l = $_->parse($l);
-    }
+    $l = $self->replace($l);
     $c->htmllines($l);
 }
 

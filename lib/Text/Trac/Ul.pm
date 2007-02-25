@@ -15,19 +15,23 @@ sub parse {
     $l =~ $pattern or return $l;
 
     my $space = length($1);
-    my $level = $c->ul->{level};
+    my $level = $c->ul->{level} || 0;
     $c->ul->{space} ||= 0;
 
     if ( $space > $c->ul->{space} ) {
-        $l = '<ul>' . $l;
-        $level++;
+        for ( 1 .. ( $space + 1 ) / 2 - $level ) {
+            $l = '<ul>' . $l;
+            $level++;
+        }
     }
     elsif ( $space < $c->ul->{space} ) {
-        $l = '</ul>' . $l;
-        $level--;
+        for ( 1 .. ( $c->ul->{space} - $space ) / 2 ) {
+            $l = '</ul>' . $l;
+            $level--;
+        }
     }
 
-    $c->ul({level => $level, space => $space });
+    $c->ul({ level => $level, space => $space });
 
     $l =~ s{ $pattern }{<li>$2</li>}xmsg;
 
@@ -42,11 +46,7 @@ sub parse {
     }
 
     # parse inline nodes
-    my $parsers = $self->_get_matched_parsers('inline', $l);
-    for ( @{$parsers} ){
-        $l = $_->parse($l);
-    }
-
+    $l = $self->replace($l);
     $c->htmllines($l);
 
     return;

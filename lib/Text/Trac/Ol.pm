@@ -17,7 +17,7 @@ sub parse {
     my $type  = $2;
 
     my $space = length($1);
-    my $level = $c->ol->{level};
+    my $level = $c->ol->{level} || 0;
     $c->ol->{space} ||= 0;
 
     my $start_tag;
@@ -37,13 +37,22 @@ sub parse {
         $start_tag = qq{<ol class="upperroman">};
     }
 
+    open my $out, '>>', '/tmp/ol.txt';
+    print $out $c->ol->{space} . "\n";
+    close($out);
+
     if ( $space > $c->ol->{space} ){
-        $l = $start_tag . $l;
-        $level++;
+       for ( 1 .. ( $space + 1 ) / 2 - $level ) {
+           $l = $start_tag . $l;
+           $level++;
+       }
     }
     elsif ( $space < $c->ol->{space} ){
-        $l = '</ol>' . $l;
-        $level--;
+        for ( 1 .. ( $c->ol->{space} - $space ) / 2 ) {
+            $l = '</ol>' . $l;
+            $level--;
+            $c->ol->{space} = $level;
+        }
     }
 
     $c->ol({level => $level, space => $space });
@@ -58,14 +67,11 @@ sub parse {
             $l .= '</ol>';
         }
         $c->ol->{level} = 0;
+        $c->ol->{space} = 0;
     }
 
     # parse inline nodes
-    my $parsers = $self->_get_matched_parsers('inline', $l);
-    for ( @{$parsers} ){
-        $l = $_->parse($l);
-    }
-
+    $l = $self->replace($l);
     $c->htmllines($l);
 
     return;

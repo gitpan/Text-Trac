@@ -1,19 +1,18 @@
-use strict;
-use warnings;
-use ExtUtils::MakeMaker;
+use inc::Module::Install;
 
-WriteMakefile(
-    NAME                => 'Text::Trac',
-    AUTHOR              => 'Gosuke Miyashita <gosukenator@gmail.com>',
-    VERSION_FROM        => 'lib/Text/Trac.pm',
-    ABSTRACT_FROM       => 'lib/Text/Trac.pm',
-    PL_FILES            => {},
-    PREREQ_PM => {
-        'Test::Base'               => 0,
-        'UNIVERSAL::require'       => 0,
-        'Class::Accessor::Fast'    => 0,
-        'Class::Data::Inheritable' => 0,
-    },
-    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'Text-Trac-*' },
-);
+name('Text-Trac');
+all_from('lib/Text/Trac.pm');
+
+requires('Test::Base');
+requires('UNIVERSAL::require');
+requires('Class::Accessor::Fast');
+requires('Class::Data::Inheritable');
+requires('Tie::IxHash');
+requires('List::MoreUtils');
+
+no_index( package => 'TestMacro' );
+
+auto_include;
+auto_install;
+
+WriteAll;

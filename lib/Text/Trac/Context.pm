@@ -2,16 +2,18 @@ package Text::Trac::Context;
 use strict;
 use base qw (Class::Accessor::Fast);
 
-__PACKAGE__->mk_accessors( qw( ul ol min_heading_level permalink in_block_of ) );
+__PACKAGE__->mk_accessors( qw( ul ol min_heading_level permalink in_block_of trac_url ) );
 
 my %Defaults = (
-        text        => '',
-        html        => '',
-        htmllines   => [],
-        ul          => {},
-        ol          => {},
-        shift_count => 0,
-        in_block_of => [],
+        text          => '',
+        html          => '',
+        htmllines     => [],
+        ul            => {},
+        ol            => {},
+        shift_count   => 0,
+        in_block_of   => [],
+        disable_links => [],
+        enable_links  => [],
 );
 
 sub new {

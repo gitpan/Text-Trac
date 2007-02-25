@@ -1,6 +1,11 @@
 Revision history for Text-Trac
 
-0.05    Sat Oct 28
+0.06    Sat Feb 25
+        Fix list handling(Ul.pm and Ol.pm).
+        Refactor inline node parsers wholly.
+        Add supports for TracLinks and WikiMacros.
+       
+0.05    Fri Oct 27
         Using Test::Base instead of Test::More in 01-text-trac.t.
         Fix the bug reported on rt.cpan.org ticket #21431.
         http://rt.cpan.org/Ticket/Display.html?id=21431

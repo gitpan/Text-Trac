@@ -32,10 +32,11 @@ sub parse {
         }
 
         # parse inline nodes
-        $parsers = $self->_get_matched_parsers('inline', $l);
-        for ( @{$parsers} ){
-            $l = $_->parse($l);
-        }
+        #$parsers = $self->_get_matched_parsers('inline', $l);
+        #for ( @{$parsers} ){
+        #    $l = $_->parse($l);
+        #}
+        $l = $self->replace($l);
         $c->htmllines($l);
     }
 

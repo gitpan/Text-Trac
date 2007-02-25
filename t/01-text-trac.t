@@ -1,23 +1,7 @@
-#!perl -T
-
 use strict;
-use Test::Base;
-use Text::Trac;
+use t::TestTextTrac;
 
-delimiters('###');
-
-plan tests => 1 * blocks;
-
-my $p = Text::Trac->new();
-
-sub parse {
-    local $_ = shift;
-    $p->parse($_);
-    $p->html;
-}
-
-filters { input => 'parse', expected => 'chomp' };
-run_is 'input' => 'expected';
+run_tests;
 
 __DATA__
 ### h1 test
@@ -232,8 +216,8 @@ http://mizzy.org/
 [http://mizzy.org/ Title]
 --- expected
 <p>
-<a class="ext-link" href="http://mizzy.org/">http://mizzy.org/</a>
-<a class="ext-link" href="http://mizzy.org/">Title</a>
+<a class="ext-link" href="http://mizzy.org/"><span class="icon"></span>http://mizzy.org/</a>
+<a class="ext-link" href="http://mizzy.org/"><span class="icon"></span>Title</a>
 </p>
 
 ### auto image link test
@@ -337,3 +321,19 @@ indent content
 double space
 </dd>
 </dl>
+
+### unknown short link
+--- input
+unknown:target
+--- expected
+<p>
+unknown:target
+</p>
+
+### unknown long link
+--- input
+[unknown:target label]
+--- expected
+<p>
+[unknown:target label]
+</p>

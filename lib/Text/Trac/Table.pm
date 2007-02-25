@@ -24,11 +24,7 @@ sub parse {
         $l = "<tr><td>" . join( "</td><td>", split(/\|\|/, $l) ) . "</td></tr>";
 
         # parse inline nodes
-        my $inline_parsers = $self->_get_matched_parsers('inline', $l) if $l;
-        for my $parser ( @{$inline_parsers} ){
-            $l = $parser->parse($l);
-        }
-
+        $l = $self->replace($l);
         $c->htmllines($l);
     }
 
