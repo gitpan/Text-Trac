@@ -43,6 +43,7 @@ sub parse {
             $l .= '</ul>';
         }
         $c->ul->{level} = 0;
+        $c->ul->{space} = 0;
     }
 
     # parse inline nodes

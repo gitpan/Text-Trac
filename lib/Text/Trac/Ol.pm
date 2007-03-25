@@ -37,10 +37,6 @@ sub parse {
         $start_tag = qq{<ol class="upperroman">};
     }
 
-    open my $out, '>>', '/tmp/ol.txt';
-    print $out $c->ol->{space} . "\n";
-    close($out);
-
     if ( $space > $c->ol->{space} ){
        for ( 1 .. ( $space + 1 ) / 2 - $level ) {
            $l = $start_tag . $l;
@@ -51,7 +47,6 @@ sub parse {
         for ( 1 .. ( $c->ol->{space} - $space ) / 2 ) {
             $l = '</ol>' . $l;
             $level--;
-            $c->ol->{space} = $level;
         }
     }
 

@@ -84,3 +84,36 @@ __DATA__
 </ol></ol><li>7</li>
 <li>8</li></ol>
 
+### 2 set of ul nodes
+--- input
+ * list 1-1
+ * list 1-2
+ * list 1-3
+
+ * list 2-1
+ * list 2-2
+ * list 2-3
+--- expected
+<ul><li>list 1-1</li>
+<li>list 1-2</li>
+<li>list 1-3</li></ul>
+<ul><li>list 2-1</li>
+<li>list 2-2</li>
+<li>list 2-3</li></ul>
+
+### 2 set of ol nodes
+--- input
+ a. list 1-1
+ a. list 1-2
+ a. list 1-3
+
+ a. list 2-1
+ a. list 2-2
+ a. list 2-3
+--- expected
+<ol class="loweralpha"><li>list 1-1</li>
+<li>list 1-2</li>
+<li>list 1-3</li></ol>
+<ol class="loweralpha"><li>list 2-1</li>
+<li>list 2-2</li>
+<li>list 2-3</li></ol>

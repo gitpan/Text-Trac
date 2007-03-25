@@ -418,7 +418,7 @@ source:trunk/COPYING
 </p>
 
 ### source link test 8
---- inputx
+--- input
 !source:trunk/COPYING#200
 --- expected
 <p>

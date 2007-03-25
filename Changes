@@ -1,6 +1,9 @@
 Revision history for Text-Trac
 
-0.06    Sat Feb 25
+0.07    Sun Mar 25
+        Tiny fix for Ul.pm and Ol.pm
+
+0.06    Wed Nov 9
         Fix list handling(Ul.pm and Ol.pm).
         Refactor inline node parsers wholly.
         Add supports for TracLinks and WikiMacros.

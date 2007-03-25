@@ -5,7 +5,7 @@ use strict;
 use Text::Trac::Context;
 use Text::Trac::BlockNode;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 my %Defaults = (
     html              => '',
@@ -61,7 +61,7 @@ Text::Trac - Perl extension for formatting text with Trac Wiki Style.
 
 =head1 VERSION
 
-Version 0.06
+Version 0.07
 
 =head1 SYNOPSIS
 
@@ -117,7 +117,7 @@ Available URLs are:
 =head3 disable_links
 
 Specify TracLink types you want to disable.
-All types are enables if you don't specify this option.
+All types are enabled if you don't specify this option.
 
     my $parser = Text::Trac->new(
         disable_links => [ qw( changeset ticket ) ],
