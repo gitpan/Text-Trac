@@ -15,9 +15,8 @@ sub parse {
     my $level = length($1) + $c->min_heading_level -1;
 
     my $id = $self->_strip( $2 );
-    $l = qq(<h$level id="$id">$2</h$level>);
+    $l = qq(<h$level id="$id">) .  $self->replace($2) . qq(</h$level>);
 
-    $l = $self->replace($l);
     $c->htmllines($l);
 }
 

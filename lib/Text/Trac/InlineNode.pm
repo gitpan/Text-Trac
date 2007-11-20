@@ -5,6 +5,7 @@ use Tie::IxHash;
 use Text::Trac::Macro;
 use UNIVERSAL::require;
 use Text::Trac::LinkResolver;
+use HTML::Entities qw();
 
 tie my %token_table, 'Tie::IxHash';
 
@@ -94,9 +95,18 @@ sub new {
 }
 
 sub parse {
-    my ( $self, $l ) = @_;
-    $l =~ s/$self->{rules}/$self->_replace($&, $`, $')/xmseg;
-    return $l;
+    my ( $self, $rest ) = @_;
+    my $html = '';
+    while ($rest =~ /$self->{rules}/xms) {
+        $html .= $self->escape($`) . $self->_replace($&, $`, $');
+        $rest = $';
+    }
+    return $html . $self->escape($rest);
+}
+
+sub escape {
+    my ( $self, $s ) = @_;
+    return HTML::Entities::encode($s, '<>&"');
 }
 
 sub _replace {

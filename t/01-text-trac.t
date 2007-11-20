@@ -337,3 +337,37 @@ unknown:target
 <p>
 [unknown:target label]
 </p>
+
+### escape HTML meta-characters
+--- input
+foo <bar> baz.
+foo '''bar''' baz.
+
+ * foo <bar> bar.
+ * foo '''bar''' baz.
+
+ 1. foo <bar> bar.
+ 1. foo '''bar''' baz.
+
+||foo||<bar>||'''baz'''||
+
+{{{
+foo <bar> baz.
+foo '''bar''' baz.
+}}}
+--- expected
+<p>
+foo &lt;bar&gt; baz.
+foo <strong>bar</strong> baz.
+</p>
+<ul><li>foo &lt;bar&gt; bar.</li>
+<li>foo <strong>bar</strong> baz.</li></ul>
+<ol start="1"><li>foo &lt;bar&gt; bar.</li>
+<li>foo <strong>bar</strong> baz.</li></ol>
+<table>
+<tr><td>foo</td><td>&lt;bar&gt;</td><td><strong>baz</strong></td></tr>
+</table>
+<pre class="wiki">
+foo &lt;bar&gt; baz.
+foo '''bar''' baz.
+</pre>

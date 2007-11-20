@@ -27,7 +27,7 @@ sub parse {
             last;
         }
         else {
-            $c->htmllines($l);
+            $c->htmllines($self->escape($l));
         }
     }
 

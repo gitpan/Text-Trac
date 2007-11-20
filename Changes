@@ -1,5 +1,9 @@
 Revision history for Text-Trac
 
+0.08    Tue Nov 20
+        Apply a patch of https://rt.cpan.org/Ticket/Display.html?id=30816.
+        Thanks to Kazuyoshi KATO!
+        
 0.07    Sun Mar 25
         Tiny fix for Ul.pm and Ol.pm
 

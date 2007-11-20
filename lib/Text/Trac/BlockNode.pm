@@ -54,6 +54,11 @@ sub parse {
     }
 }
 
+sub escape {
+    my ( $self, $l ) = @_;
+    return $self->inline_parser->escape($l);
+}
+
 sub replace {
     my ( $self, $l ) = @_;
     return $self->inline_parser->parse($l);

@@ -33,7 +33,8 @@ sub parse {
 
     $c->ul({ level => $level, space => $space });
 
-    $l =~ s{ $pattern }{<li>$2</li>}xmsg;
+    # parse inline nodes
+    $l =~ s{ $pattern }{'<li>' . $self->replace($2) . '</li>'}xmsge;
 
     if ($c->hasnext and $c->nextline =~ /$pattern/){
         $self->parse($l);
@@ -47,7 +48,6 @@ sub parse {
     }
 
     # parse inline nodes
-    $l = $self->replace($l);
     $c->htmllines($l);
 
     return;
