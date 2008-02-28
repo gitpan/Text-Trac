@@ -18,4 +18,4 @@ requires:
   Test::Base: 0
   Tie::IxHash: 0
   UNIVERSAL::require: 0
-version: 0.08
+version: 0.09
