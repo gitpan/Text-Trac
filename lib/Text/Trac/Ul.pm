@@ -26,22 +26,26 @@ sub parse {
     }
     elsif ( $space < $c->ul->{space} ) {
         for ( 1 .. ( $c->ul->{space} - $space ) / 2 ) {
-            $l = '</ul>' . $l;
+            $l = '</li></ul>' . $l;
             $level--;
         }
+        $l =~ s!(?<=</(?:ul|li)>)(?= )!</li>!;
+    }
+    else {
+        $l = "</li>$l";
     }
 
     $c->ul({ level => $level, space => $space });
 
     # parse inline nodes
-    $l =~ s{ $pattern }{'<li>' . $self->replace($2) . '</li>'}xmsge;
+    $l =~ s{ $pattern }{"<li>" . $self->replace($2)}xmsge;
 
-    if ($c->hasnext and $c->nextline =~ /$pattern/){
+    if ( $c->hasnext and $c->nextline =~ /$pattern/ ){
         $self->parse($l);
     }
     else {
         for ( 1 .. $c->ul->{level} ){
-            $l .= '</ul>';
+            $l .= '</li></ul>';
         }
         $c->ul->{level} = 0;
         $c->ul->{space} = 0;
